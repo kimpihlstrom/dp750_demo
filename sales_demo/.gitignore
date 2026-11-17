@@ -1,0 +1,9 @@
+# Bundle deployment state, created by the Databricks CLI
+.databricks/
+# Python and pytest caches
+__pycache__/
+.pytest_cache/
+# Logs, local secrets, Mac clutter
+*.log
+.env
+.DS_Store

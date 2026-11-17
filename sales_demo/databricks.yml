@@ -1,0 +1,33 @@
+# Declarative Automation Bundle (formerly Databricks Asset Bundle). The one required file.
+bundle:
+  name: sales_demo
+
+include:
+  - resources/*.yml
+
+variables:
+  catalog:
+    description: Catalog for the sales table
+    default: dp750_091126
+  schema:
+    description: Schema for the sales table
+    default: m12_demo
+
+targets:
+  dev:
+    mode: development     # [dev you] prefix, schedules paused
+    default: true
+    workspace:
+      host: https://adb-7405604538569178.18.azuredatabricks.net
+
+  prod:
+    mode: production      # exact names, schedules run, stricter checks
+    git:
+      branch: main        # deploys only from main
+    workspace:
+      host: https://adb-7405604538569178.18.azuredatabricks.net
+      root_path: /Workspace/Users/kim.pihlstrom@northadvisors.com/.bundle/${bundle.name}/${bundle.target}
+    variables:
+      schema: m12_prod
+    # run_as:
+    #   service_principal_name: <application-id>   # recommended for production

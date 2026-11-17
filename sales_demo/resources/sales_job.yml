@@ -1,0 +1,20 @@
+resources:
+  jobs:
+    sales_job:                      # the job key: bundle run and bundle open use it
+      name: sales_job
+      schedule:                     # the Monday run. Paused in dev mode
+        quartz_cron_expression: "0 0 6 ? * MON"
+        timezone_id: Europe/Helsinki
+      tasks:                        # no cluster defined: runs on serverless
+        - task_key: run_unit_tests
+          notebook_task:
+            notebook_path: ../notebooks/run_tests.py
+
+        - task_key: load_sales
+          depends_on:               # runs only when the tests passed
+            - task_key: run_unit_tests
+          notebook_task:
+            notebook_path: ../notebooks/load_sales.py
+            base_parameters:        # arrive as widgets in the notebook
+              catalog: ${var.catalog}
+              schema: ${var.schema}
